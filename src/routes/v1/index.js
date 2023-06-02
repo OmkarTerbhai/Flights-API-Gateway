@@ -2,10 +2,10 @@ const express = require('express');
 const userRoutes = require('./user-routes');
 const { InfoController } = require('../../controllers');
 
-
+const {AuthMiddleware} = require('../../middlewares')
 const router = express.Router();
 
-router.get('/info', InfoController.info);
+router.get('/info', AuthMiddleware.checkAuth, InfoController.info);
 
 router.use('/user', userRoutes);
 

@@ -36,7 +36,30 @@ async function signin(data) {
     }
 }
 
+async function isAuthenticated(token) {
+    try {
+        console.log("In Serv", token);
+        if(!token) {
+            throw new AppError("Missing JWT token", StatusCodes.BAD_REQUEST);
+        }
+        const response = Auth.verifyToken(token);
+        console.log("Res id", response.id);
+        const user = await userRepository.get(response.id);
+        console.log(user);
+        if(!user) {
+            throw new AppError("No user found", StatusCodes.BAD_REQUEST);
+        }
+        return user.id;
+    } catch (error) {
+        if(error.name == 'JsonWebTokenError') {
+            throw new AppError("Invalid JSON token", StatusCodes.BAD_REQUEST);
+        }
+        throw error;
+    }
+}
+
 module.exports = {
     createUser,
-    signin
+    signin,
+    isAuthenticated
 }
