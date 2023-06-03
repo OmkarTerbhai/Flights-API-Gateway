@@ -26,7 +26,24 @@ async function checkAuth(req, res, next) {
     }
 }
 
+async function isAdmin(req, res, next) {
+    try {
+        console.log("User from middleware ", req.user);
+        const response = await UserService.isAdmin(req.user.id);
+        if(!response) {
+            return res.status(StatusCodes.UNAUTHORIZED)
+                    .json({message: "Not Authorized"});
+        }
+        next();
+
+    }
+    catch(error) {
+
+    }
+}
+
 module.exports = {
     validateAuthRequest,
-    checkAuth
+    checkAuth,
+    isAdmin
 }

@@ -58,7 +58,7 @@ async function isAuthenticated(token) {
         if(!user) {
             throw new AppError("No user found", StatusCodes.BAD_REQUEST);
         }
-        return user.id;
+        return user;
     } catch (error) {
         if(error.name == 'JsonWebTokenError') {
             throw new AppError("Invalid JSON token", StatusCodes.BAD_REQUEST);
@@ -82,9 +82,22 @@ async function addRoleToUser(data) {
     }
 }
 
+async function isAdmin(id) {
+    try {
+        console.log("Id from serv: ", id)
+        const newUser = await userRepository.get(id);
+        const role = await roleRepository.getRoleByName(Enums.USER_ENUMS.ADMIN);
+        return (newUser.hasRole(role))
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     createUser,
     signin,
     isAuthenticated,
-    addRoleToUser
+    addRoleToUser,
+    isAdmin
 }
