@@ -1,17 +1,26 @@
 const { StatusCodes } = require('http-status-codes');
-const { UserRepository } = require('../repositories');
+const { UserRepository, RoleRepository } = require('../repositories');
 const AppError = require('../utils/errors/app-error');
 const bcrypt = require('bcrypt');
-const {Auth} = require('../utils/common')
+const {Enums} = require('../utils/common')
+const {Auth} = require('../utils/common');
 
 const userRepository = new UserRepository();
+const roleRepository = new RoleRepository();
 
 async function createUser(data) {
     try {
-        const newUser = userRepository.create(data);
+        const newUser = await userRepository.create(data);
+        const role = await roleRepository.getRoleByName(Enums.USER_ENUMS.CUSTOMER);
+        console.log("User: ", newUser);
+        console.log(role);
+        //Allocate user with customer role by default
+        newUser.addRole(role);
         return newUser;
+
     }
     catch(error) {
+        console.log(error)
         throw new AppError("Error in creating new user", StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
