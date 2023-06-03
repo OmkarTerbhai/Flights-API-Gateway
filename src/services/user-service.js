@@ -67,8 +67,24 @@ async function isAuthenticated(token) {
     }
 }
 
+async function addRoleToUser(data) {
+    try {
+        const newUser = await userRepository.getUserByEmail(data.email);
+        const role = await roleRepository.getRoleByName(data.role);
+        console.log("User", newUser);
+        console.log("Role", role);
+        newUser.addRole(role);
+        return newUser;
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     createUser,
     signin,
-    isAuthenticated
+    isAuthenticated,
+    addRoleToUser
 }
