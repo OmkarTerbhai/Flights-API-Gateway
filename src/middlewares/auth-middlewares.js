@@ -35,7 +35,6 @@ async function isAdmin(req, res, next) {
                     .json({message: "Not Authorized"});
         }
         next();
-
     }
     catch(error) {
 
