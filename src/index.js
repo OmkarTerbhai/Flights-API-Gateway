@@ -29,6 +29,10 @@ app.use('/bookingService',
         
 app.use('/api', apiRoutes);
 
+app.get('/home', (req, res) => {
+    return res.json({message: "OK"});
+});
+
 app.listen(ServerConfig.PORT, () => {
     Logger.info(`Successfully started the server on PORT : ${ServerConfig.PORT}`);
 });
